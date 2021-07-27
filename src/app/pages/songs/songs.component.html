@@ -1,0 +1,155 @@
+<p-toast></p-toast>
+
+<div class="card">
+    <p-toolbar styleClass="p-mb-4">
+        <ng-template pTemplate="left">
+            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-secondary p-mr-2" (click)="openNew()"></button>
+        </ng-template>
+
+        <ng-template pTemplate="right">
+            <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedSongs()" [disabled]="!deleteSelectedSongs || !deleteSelectedSongs.length"></button>
+           
+        </ng-template>
+    </p-toolbar>
+
+    <p-table #dt [value]="songs" [rows]="10" [paginator]="true" [globalFilterFields]="['title']"
+        [(selection)]="selectedSongs" [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+        <ng-template pTemplate="caption">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                <h5 class="p-m-0">Manage Songs</h5>
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search..." />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 3rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th>Image</th>
+                <th pSortableColumn="title">title <p-sortIcon field="title"></p-sortIcon></th>
+                <th pSortableColumn="rating">Reviews <p-sortIcon field="rating"></p-sortIcon></th>
+                <th >Details</th>
+                <th>Action</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-song>
+            <tr>
+                <td>
+                    <p-tableCheckbox [value]="song"></p-tableCheckbox>
+                </td>
+                <td><img src="assets/music.png" [alt]="song.title" width="100" class="p-shadow-4" /></td>
+                <td>{{song.title}}</td>
+                <td><p-rating [ngModel]="song.ratings" [readonly]="true" [cancel]="false"></p-rating></td>
+                <td><button pButton pRipple icon="pi pi-link" class="p-button-rounded p-button-info p-mr-2" (click)="editSong(song)"></button></td> 
+                <td>
+                    <button pButton pRipple icon="pi pi-star" class="p-button-rounded p-button-primary" (click)="rate(song)"></button>
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editSong(song)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteSong(song)"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                In total there are {{songs ? songs.length : 0 }} songs.
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+<!-- 
+<p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" header="Artist Details" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <img src="assets/riri.jpeg" [alt]="artist.realName" class="product-image" *ngIf="artist.picture">
+        <div class="p-field">
+            <label for="name">Real Name</label>
+            <input type="text" pInputText id="name" [(ngModel)]="artist.realName" required autofocus />
+            <small class="p-error" *ngIf="submitted && !artist.realName">Name is required.</small>
+        </div>
+        <br/>
+         <div class="p-field">
+            <label for="stageName">Stage Name</label>
+            <input type="text" pInputText id="stageName" [(ngModel)]="artist.stageName"  />
+            <small class="p-error" *ngIf="submitted && !artist.stageName">Stage Name  is required.</small>
+        </div>
+        <br/>
+
+       <div class="p-field">
+            <label for="recordLabel">Record Label</label>
+            <input type="text" pInputText id="recordLabel" [(ngModel)]="artist.recordLabel" />
+            <small class="p-error" *ngIf="submitted && !artist.recordLabel">Record Label is required.</small>
+        </div>
+        <br/>
+
+        <div class="p-field">
+            <label for="name">DOB</label>
+            <p-calendar [(ngModel)]="artist.dob" dateFormat="yy-mm-dd"></p-calendar>
+           
+        </div>
+        <br/>
+
+        
+        <div class="p-field">
+            <label for="dob">DOD</label>
+            <p-calendar [(ngModel)]="artist.dob" dateFormat="yy-mm-dd"></p-calendar>
+        </div>
+        <br/>
+        <div class=" mb-3">
+            <label for="picure">Picture</label><br/>
+            <input type="file" class="form-control" id="picure" formControlName="picure" (change)='onPicureSelected($event)' />
+           
+        </div>
+        <br/>
+        <p-rating [(ngModel)]="artist.ratings" [cancel]="false"></p-rating>
+
+    </ng-template>
+    
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"></button>
+    </ng-template>
+</p-dialog>
+-->
+<p-dialog [(visible)]="newDialog" [style]="{width: '1500px'}" header="Album Details" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+            <div class="p-grid forms-grid">
+                <div class="p-col-12 p-md-6">
+                    <div>Title*</div>
+                    <input  type="text" class="form-control" pInputText   id="title" autocomplete="off"   #title> 
+    
+                </div>
+                <br/>
+
+                <p-pickList [source]="artists" [target]="selectedArtists" sourceHeader="Available" targetHeader="Selected" [dragdrop]="true" [showSourceControls]="false" [showTargetControls] = "false"
+                [responsive]="true" [sourceStyle]="{'height':'30rem'}" [targetStyle]="{'height':'30rem'}" filterBy="realName"
+                sourceFilterPlaceholder="Search by Real Name" targetFilterPlaceholder="Search by Real Name">
+                    <ng-template let-artist pTemplate="item">
+                        <div class="product-item">
+                            <div class="image-container">
+                                    <img src="assets/riri.jpeg" [alt]="artist.realName" class="product-image" />
+                            </div>
+                            <div class="product-list-detail">
+                                <h5 class="p-mb-2">{{artist.realName}}</h5>
+                                <span class="product-category">{{artist.stageName}}</span>
+                            </div>
+                            <div class="product-list-action">
+                                <p-rating [ngModel]="artist.ratings" [readonly]="true" [cancel]="false"></p-rating>
+                            </div>
+                        </div>
+                    </ng-template>
+                </p-pickList>
+
+
+                <br/>
+
+                <button pButton pRipple label="Save"  (click)="save(title.value)"></button>
+            </div>
+        
+    </ng-template>
+   
+
+</p-dialog> 
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

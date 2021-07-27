@@ -1,0 +1,58 @@
+<p-carousel [value]="artists" styleClass="custom-carousel" [numVisible]="6" [numScroll]="1" [circular]="true" [autoplayInterval]="3000" [responsiveOptions]="responsiveOptions">
+    <ng-template pTemplate="header">
+        <h5>Most Rated Artists</h5>
+    </ng-template>
+    <ng-template let-artist pTemplate="item">
+        <div class="product-item">
+            <div class="product-item-content">
+                <div class="p-mb-3">
+                    <!-- <img src="assets/showcase/images/demo/product/{{product.image}}" [alt]="artist.realName" class="product-image" /> -->
+                    <img src="assets/riri.jpeg" [alt]="artist.realName" class="product-image"  />
+                </div>
+                <div>
+                    <h4 class="p-mb-1">{{artist.realName}}</h4>
+                    <h6 class="p-mt-0 p-mb-3">{{artist.dob}}</h6>
+                    <!-- <span [class]="'product-badge status-'+product.inventoryStatus.toLowerCase()">{{artist.realName}}</span> -->
+                    <div class="car-buttons p-mt-5">
+                        <p-button type="button" styleClass="p-button p-button-rounded p-mr-2" icon="pi pi-search"></p-button>
+                        <p-button type="button" styleClass="p-button-success p-button-rounded p-mr-2" icon="pi pi-star"></p-button>
+                        <p-button type="button" styleClass="p-button-help p-button-rounded" icon="pi pi-cog"></p-button>
+                    </div>
+                    <p-rating  [ngModel]="artist.ratings" [cancel]="false"></p-rating>
+
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</p-carousel>
+
+<div class="card">
+    <p-splitter [style]="{'height': '220px'}" styleClass="p-mb-5">
+        <ng-template pTemplate>
+            <div class="p-col p-d-flex p-ai-center p-jc-center">
+                <p-table [value]="songs">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Title</th>
+                            <th>Details</th>
+                            <th>Rating</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-song>
+                        <tr>
+                            <td>{{song.title}}</td>
+                            <td><button pButton pRipple icon="pi pi-link" class="p-button-rounded p-button-info p-mr-2" (click)="songDetails(song)"></button></td> 
+                            <td><p-rating [ngModel]="song.ratings" [readonly]="true" [cancel]="false"></p-rating></td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </ng-template>
+        <ng-template pTemplate>
+            <h5>Most Rated albums</h5><br/>
+            <div class="p-col p-d-flex p-ai-center p-jc-center">
+                <p-chart type="pie" [data]="data"></p-chart>
+            </div>
+        </ng-template>
+    </p-splitter>
+</div>
